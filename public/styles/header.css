@@ -1,0 +1,17 @@
+nav {
+    margin-bottom: 50px;
+}
+
+.customNavbar {
+    background-color: #d59c2a;
+    color: #000000;
+}
+
+.customSidenavbar {
+    background-color: #fed600;
+    color: #000000;
+}
+
+.navbarLogo {
+    font-size: xx-large;
+}

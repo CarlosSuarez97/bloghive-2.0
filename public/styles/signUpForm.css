@@ -1,0 +1,10 @@
+:root {
+    vertical-align: middle;
+}
+
+#signUpBtn {
+    width: 50%;
+    background-color: #d59c2a;
+    color: #000000;
+    width: 100%;
+}

@@ -1,0 +1,54 @@
+/* Custom colors to be used
+#d59c2a - dark yellow
+#fed600 - light yellow
+#000000 - plain black
+#ffffff - plain white */
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+  background-image: url("https://www.transparenttextures.com/patterns/hexellence.png");
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.customButtons {
+  width: 50%;
+  background-color: #d59c2a;
+  color: #000000;
+}
+
+.customButtons2 {
+   width: 50%;
+   background-color: #fed600;
+   color: #000000;
+}
+
+.rubik-medium {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.rubik-semibold {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.rubik-regular {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
