@@ -4,6 +4,7 @@ import 'materialize-css/dist/css/materialize.min.css'; //importing Materialize C
 import 'materialize-css/dist/js/materialize.min.js'; //importing Materialize's JS components
 import "../../public/styles/loginForm.css"; //importing the custom CSS file for this component
 import { useNavigate } from "react-router-dom";
+import M from "materialize-css"; //importing what i need from materialize to make the popup message
 
 const serverURL = "http://localhost:3000";
 
@@ -25,13 +26,14 @@ const LoginForm = () => {
                 password
             });
             if(response.data.success) {
-                navigate("/home");
+                localStorage.setItem("token", response.data.token); //saving the token
+                M.toast({html: response.data.message || "Correct!", classes: "red-darken-2"}).then(navigate("/home"));
                 console.log(response.data.success);
             } else {
-                console.log("Fail");
+                M.toast({ html: response.data.message || 'Invalid credentials', classes: 'red darken-2' });
             }
         } catch (error) {
-            console.log("There's been an issue: ", error);
+            console.error("Error: ", error);
         }
 
     }

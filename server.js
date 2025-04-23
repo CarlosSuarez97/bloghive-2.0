@@ -8,6 +8,7 @@ import dotenv from "dotenv"; // for the database credentials
 import bcrypt from "bcrypt"; //for encrypting and hashing passwords entered by the user on the client side
 import path from "path";
 import { fileURLToPath } from "url";
+import jwt from "jsonwebtoken"; //importing this dependency to issue a token to manage sessions
 
 
 dotenv.config(); // loading environment variables
@@ -25,6 +26,29 @@ const saltRounds = 10;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+//custom middleware to protect routes
+const verifyToken = (req, res, next) => {
+
+    const authHeader = req.headers.authorization;
+
+    if(!authHeader) {
+        return res.json({
+            message: "No token provided"
+        }).status(401);
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if(err) {
+            return res.json({
+                message: "Invalid token"
+            }).status(403);
+        };
+        req.user = decoded;
+        next();
+    })
+}
 
 
 db.connect();
@@ -73,6 +97,7 @@ app.post("/login", async (req, res) => {
     
     try {
         const checkForUser = await db.query("SELECT * FROM user_info WHERE user_email = $1", [email]);
+        const user = checkForUser.rows[0];
         const hashedPassword = checkForUser.rows[0].user_password;
 
         if(checkForUser.rows.length > 0) {
@@ -82,20 +107,32 @@ app.post("/login", async (req, res) => {
             bcrypt.compare(password, hashedPassword, (err, result) => {
                 if(err) {
                     console.error("Something's gone wrong: ", err);
-                    return res.status(500).json({
+                    return res.json({
                         success: false,
                         message: "Server error"
-                    });
+                    }).status(500);
                 } else if (result) {
-                    return res.json({success: true,
-                        message: "Login successful"
+                    const token = jwt.sign(
+                        {
+                            id: user.user_id,
+                            email: user.user_email,
+                            firstName: user.user_first_name,
+                            lastName: user.user_last_name
+                        },
+                        process.env.JWT_SECRET,
+                        {expiresIn: "2h"}
+                    );
+                    console.log(token);
+                    return res.json({
+                        success: true,
+                        message: "Login successful!",
+                        token
                     });
-                } else {
-                    console.log("Wrong password, dummy. Try again later.");
-                    return res.status(404).json({
+                } else if (!result) {
+                    return res.json({
                         success: false,
-                        message: "Wrong credentials"
-                    });
+                        message: "The email or password you have entered is wrong. Please, try again"
+                    }).status(404);
                 }
             });
         } else {
@@ -110,8 +147,15 @@ app.post("/login", async (req, res) => {
     }
 });
 
+//Loading the user's profile after having logged in
+app.get("/home", verifyToken, (req, res) => {
+    res.json({
+        user: req.user
+    });
+    console.log(user);
+})
+
+//Server running
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-}); // server start
-
-//Management for sessions begin here
+});
