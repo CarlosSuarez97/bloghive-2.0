@@ -50,6 +50,28 @@ const verifyToken = (req, res, next) => {
     })
 }
 
+//custom middleware to prevent non-authenticated users from accessing the main page
+const tokenAuth = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({
+            message: "Access denied. No token provided"
+        })
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({
+                message: "Invalid or expired token"
+            })
+        }
+        req.user = user;
+        next();
+    })
+}
+
 
 db.connect();
 
@@ -155,7 +177,7 @@ app.post("/login", async (req, res) => {
 });
 
 //Loading the user's profile after having logged in
-app.get("/home", verifyToken, async (req, res) => {
+app.get("/home", verifyToken, tokenAuth, async (req, res) => {
     const user = req.user;
 
     try {
