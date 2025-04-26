@@ -29,7 +29,7 @@ const LoginForm = () => {
                 localStorage.setItem("token", response.data.token); //saving the token
                 M.toast({html: response.data.message || "Correct!", classes: "red-darken-2"}).then(navigate("/home"));
                 console.log(response.data.success);
-            } else {
+            } else if (!response.data.success) {
                 M.toast({ html: response.data.message || 'Invalid credentials', classes: 'red darken-2' });
             }
         } catch (error) {

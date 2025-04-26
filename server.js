@@ -97,10 +97,19 @@ app.post("/login", async (req, res) => {
     
     try {
         const checkForUser = await db.query("SELECT * FROM user_info WHERE user_email = $1", [email]);
-        const user = checkForUser.rows[0];
-        const hashedPassword = checkForUser.rows[0].user_password;
 
-        if(checkForUser.rows.length > 0) {
+        if (checkForUser.rows.length == 0) {
+
+            console.log("This user does not exist");
+            return res.json({
+                success: false,
+                message: "This user does not exist"
+            })
+
+        } else if (checkForUser.rows.length > 0) {
+
+            const user = checkForUser.rows[0];
+            const hashedPassword = checkForUser.rows[0].user_password;
 
             console.log("There's an user using that email address");
             console.log("We'll try logging you in");
@@ -120,7 +129,7 @@ app.post("/login", async (req, res) => {
                             lastName: user.user_last_name
                         },
                         process.env.JWT_SECRET,
-                        {expiresIn: "2h"}
+                        {expiresIn: "1h"}
                     );
                     console.log(token);
                     return res.json({
@@ -131,12 +140,10 @@ app.post("/login", async (req, res) => {
                 } else if (!result) {
                     return res.json({
                         success: false,
-                        message: "The email or password you have entered is wrong. Please, try again"
+                        message: "The password you have entered is invalid. Please, try again"
                     }).status(404);
                 }
             });
-        } else {
-            console.log("Nothing to do here");
         }
 
     } catch(error) {
