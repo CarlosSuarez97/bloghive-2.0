@@ -11,7 +11,6 @@ const Landing = () => {
     return(
         <>
         <div className="container">
-            <div className="row">
                 <div className="col s12 m4 l6">
                     <div className="row">
                         <img src={logo} alt="BlogHive" id="appLogo"/>
@@ -25,18 +24,6 @@ const Landing = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col s12 m8 l6">
-                    <div className="row">
-                        <h2 className="rubik-semibold">Welcome to BlogHive</h2>
-                    </div>
-                    <div className="row">
-                        <h3 className="rubik-medium">Create a hive of your own with your thoughts</h3>
-                    </div>
-                    <div className="row">
-                        <h4 className="rubik-regular">Come on in and let the world know what's going on inside your head.</h4>
-                    </div>
-                </div>
-            </div>
             <Footer/>
         </div>
         </>

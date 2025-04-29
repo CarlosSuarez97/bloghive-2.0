@@ -1,4 +1,6 @@
 #appLogo {
-    width: 25vw;
-    height: auto
+    width: 26vw;
+    height: auto;
+    padding: 70px 0;
+    text-align: center;
 }

@@ -5,12 +5,10 @@ import Footer from "../components/footer";
 import SignUpForm from "../components/signUpForm.jsx";
 import logo from "../assets/logo.png";
 import "../../public/styles/signup.css";
-import Header from "../components/header.jsx";
 
 const SignUp = () => {
     return(
         <>
-        <Header/>
         <div className="container">
             <div className="row">
                 <div className="col s12">
@@ -22,6 +20,9 @@ const SignUp = () => {
             </div>
             <div className="row">
                 <SignUpForm/>
+            </div>
+            <div className="row">
+                <a href="/login">Already have an account? Click here to log in</a>
             </div>
             <div className="row">
                 <Footer/>

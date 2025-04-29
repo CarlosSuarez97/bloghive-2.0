@@ -27,10 +27,10 @@ const LoginForm = () => {
             });
             if(response.data.success) {
                 localStorage.setItem("token", response.data.token); //saving the token
-                M.toast({html: response.data.message || "Correct!", classes: "red-darken-2"}).then(navigate("/home"));
+                M.toast({html: response.data.message || "Correct!", classes: "red-darken-2 rounded"}).then(navigate("/home"));
                 console.log(response.data.success);
             } else if (!response.data.success) {
-                M.toast({ html: response.data.message || 'Invalid credentials', classes: 'red darken-2' });
+                M.toast({ html: response.data.message || 'Invalid credentials', classes: 'red darken-2 rounded' });
             }
         } catch (error) {
             console.error("Error: ", error);

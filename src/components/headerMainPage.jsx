@@ -8,15 +8,19 @@ import M from "materialize-css";
 
 
 const HeaderMainPage = () => {
+
     const navigate = useNavigate();
     const sidenavRef = useRef(null);
     useEffect(() => {
         M.Sidenav.init(sidenavRef.current, {edge: "left", draggable: true});
     }, []);
-    const handleNav = (path) => {
-        navigate(path);
-        const sidenavInstance = M.Sidenav.getInstance(sidenavRef.current);
-        sidenavInstance.close();
+    const handleLogout = () => {
+        if(localStorage.getItem("token")) {
+            localStorage.removeItem("token");
+            navigate("/");
+        } else if (!localStorage.getItem("token")) {
+            console.log("There's no user logged in currently");
+        }
     }
     return(
         <>
@@ -26,13 +30,13 @@ const HeaderMainPage = () => {
                 <a onClick={() => navigate("/")} className="brand-logo rubik-semibold navbarLogo">BlogHive</a>
                 <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
                 <ul className="right hide-on-med-and-down">
-                    <li><a onClick={() => {navigate("/")}} className="rubik-regular">Log Out</a></li>
+                    <li><a onClick={handleLogout} className="rubik-regular">Log Out</a></li>
                 </ul>
             </div>
         </nav>
         </div>
         <ul className="sidenav customSidenavbar" id="mobile-demo" ref={sidenavRef}>
-            <li><a onClick={() => {handleNav("/")}} className="rubik-regular customNavbar btn waves-effect waves-light">Log Out</a></li>
+            <li><a className="rubik-regular customNavbar btn waves-effect waves-light">Log Out</a></li>
         </ul>
         </>
     )

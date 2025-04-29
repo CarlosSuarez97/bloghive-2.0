@@ -158,7 +158,7 @@ app.post("/login", async (req, res) => {
                         success: true,
                         message: "Login successful!",
                         token
-                    });
+                    }).status(202);
                 } else if (!result) {
                     return res.json({
                         success: false,
@@ -177,7 +177,7 @@ app.post("/login", async (req, res) => {
 });
 
 //Loading the user's profile after having logged in
-app.get("/home", verifyToken, tokenAuth, async (req, res) => {
+app.get("/home", verifyToken, async (req, res) => {
     const user = req.user;
 
     try {
@@ -189,16 +189,16 @@ app.get("/home", verifyToken, tokenAuth, async (req, res) => {
                 user: result.rows[0]
             });
         } else {
-            return res.json({
+            return res.status(404).json({
                 success: false,
                 message: "User not found"
-            }).status(404);
+            });
         }
     } catch (err) {
-        return res.json({
+        return res.status(500).json({
             success: false,
             message: "Internal server error"
-        }).status(500);
+        });
     }
 });
 

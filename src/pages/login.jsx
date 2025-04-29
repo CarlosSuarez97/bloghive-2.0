@@ -3,12 +3,10 @@ import LoginForm from "../components/loginForm";
 import logo from "../assets/logo.png";
 import Footer from "../components/footer";
 import "../../public/styles/login.css";
-import Header from "../components/header";
 
 const Login = () => {
     return(
         <>
-        <Header/>
         <div>
             <div className="container">
                 <div className="row">
@@ -19,6 +17,9 @@ const Login = () => {
                 </div>
                 <div className="row">
                     <LoginForm/>
+                </div>
+                <div className="row">
+                    <a href="/signup">Click here to create a new account</a>
                 </div>
                 <div className="row">
                     <Footer/>
