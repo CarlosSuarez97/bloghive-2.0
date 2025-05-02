@@ -5,7 +5,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min.js';
 import Footer from "../components/footer";
 import HeaderMainPage from '../components/headerMainPage';
-//import for the custom CSS for the page goes here
+import FAButton from '../components/FAButton';
 
 const HomePage = () => {
     const [user, setUser] = useState(null);
@@ -49,6 +49,7 @@ const HomePage = () => {
                 </div>
             </div>
         </div>
+        <FAButton/>
         </>
     );
 }

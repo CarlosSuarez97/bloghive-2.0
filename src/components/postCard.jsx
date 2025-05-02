@@ -4,7 +4,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min.js';
 //import for the custom CSS for the page goes here
 
-const postCard = () => {
+const PostCard = () => {
     return(
         <>
         <div className="col s12 m7">
@@ -26,4 +26,4 @@ const postCard = () => {
     )
 }
 
-export default postCard;
+export default PostCard;
