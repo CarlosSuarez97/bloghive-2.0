@@ -27,7 +27,6 @@ const HeaderMainPage = () => {
         <div className="navbar-fixed">
         <nav>
             <div className="nav-wrapper customNavbar">
-                <a onClick={() => navigate("/")} className="brand-logo rubik-semibold navbarLogo">BlogHive</a>
                 <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
                 <ul className="right hide-on-med-and-down">
                     <li><a onClick={handleLogout} className="rubik-regular">Log Out</a></li>

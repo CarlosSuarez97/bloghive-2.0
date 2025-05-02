@@ -37,9 +37,17 @@ const HomePage = () => {
     return (
         <>
         <HeaderMainPage/>
-        <div className="container">
-            <h4>Welcome, {user.user_first_name} {user.user_last_name}!</h4>
-            <p>Email: {user.user_email}</p>
+        <div> {/*this is the card that will display the user's information*/}
+            <div className="row">
+                <div className="col s12 m12 l12">
+                    <div className="card amber lighten-2">
+                        <div className="card-content black-text">
+                            <span className="card-title">Welcome, {user.user_first_name}</span>
+                            <p>This is a simple placeholder text. All your posts will appear below this crad component</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         </>
     );
