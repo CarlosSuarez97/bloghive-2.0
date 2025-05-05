@@ -1,20 +1,16 @@
-//This is the Javascript file where the server for the application will be made
-import bodyParser from "body-parser";
-import express from "express";
-import morgan from "morgan";
+import bodyParser from "body-parser"; //to parse incoming request bodies
+import express from "express"; //to make the server
 import pg from "pg"; //connection to the database
 import cors from "cors"; // to allow requests from the React frontend
 import dotenv from "dotenv"; // for the database credentials
 import bcrypt from "bcrypt"; //for encrypting and hashing passwords entered by the user on the client side
-import path from "path";
-import { fileURLToPath } from "url";
 import jwt from "jsonwebtoken"; //importing this dependency to issue a token to manage sessions
 
 
 dotenv.config(); // loading environment variables
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; //port where the server will be running
 const db = new pg.Client({
     database: process.env.DB_NAME, //Database name
     password: process.env.DB_PASSWORD, //Database password
@@ -23,8 +19,6 @@ const db = new pg.Client({
     port: process.env.DB_PORT //Database port
 });
 const saltRounds = 10;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 //custom middleware to protect routes
 const verifyToken = (req, res, next) => {
@@ -50,28 +44,6 @@ const verifyToken = (req, res, next) => {
     })
 }
 
-//custom middleware to prevent non-authenticated users from accessing the main page
-const tokenAuth = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-        return res.status(401).json({
-            message: "Access denied. No token provided"
-        })
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({
-                message: "Invalid or expired token"
-            })
-        }
-        req.user = user;
-        next();
-    })
-}
-
 
 db.connect();
 
@@ -79,7 +51,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
 
 //Creating new users
 app.post("/signup", async (req, res) => {
@@ -199,6 +170,20 @@ app.get("/home", verifyToken, async (req, res) => {
             success: false,
             message: "Internal server error"
         });
+    }
+});
+
+//creating a new post
+app.post("/newPost", async (req, res) => {
+    const {
+        postTitle,
+        postContent
+    } = req.body;
+
+    try {
+        //Query for the insertion of the post into the database goes here
+    } catch (error) {
+        console.log("Error: ", error);
     }
 });
 

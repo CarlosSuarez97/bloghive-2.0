@@ -3,6 +3,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 import M from 'materialize-css'; // JS functionality like FAB init
 import 'materialize-css/dist/js/materialize.min.js';
 import PostComposition from "./postComposition";
+import "../../public/styles/FAButton.css";
 
 const FAButton = () => {
     useEffect(() => {
@@ -21,11 +22,11 @@ const FAButton = () => {
         <div>
             <PostComposition/>
             <div class="fixed-action-btn click-to-toggle">
-                <a class="btn-floating btn-large red">
-                    <i class="large material-icons">mode_edit</i>
+                <a class="btn-floating btn-large amber">
+                    <i class="large material-icons black-text">mode_edit</i>
                 </a>
                 <ul>
-                    <li><a class="btn-floating green modal-trigger" href="#my-modal"><i class="material-icons">add</i></a></li>
+                    <li><a class="btn-floating green modal-trigger amber lighten-2" href="#my-modal"><i class="material-icons black-text">add</i></a></li>
                 </ul>
             </div>
         </div>
