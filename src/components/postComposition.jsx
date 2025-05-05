@@ -16,11 +16,24 @@ const PostComposition = () => {
     const handleNewPost = async (e) => {
         e.preventDefault();
 
+        const token = localStorage.getItem("token");
+
+        if(!token) {
+            console.error("No token found");
+            return;
+        }
+
         try {
             const response = await axios.post(serverURL + "/newPost", {
                 postTitle,
                 postContent
-            });
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
             console.log(response.data);
         } catch (error) {
             console.error("Something's gone wrong: ", error);

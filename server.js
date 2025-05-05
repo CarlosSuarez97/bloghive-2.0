@@ -174,16 +174,29 @@ app.get("/home", verifyToken, async (req, res) => {
 });
 
 //creating a new post
-app.post("/newPost", async (req, res) => {
+app.post("/newPost", verifyToken, async (req, res) => {
+
+    const user = req.user;
+    const postDate = new Date().toLocaleDateString();
     const {
         postTitle,
         postContent
     } = req.body;
+    console.log(user.id)
+    console.log(postTitle, postContent, postDate);
 
     try {
-        //Query for the insertion of the post into the database goes here
+        await db.query("INSERT INTO post_info (post_title, post_content, post_date, post_user_id) VALUES ($1, $2, $3, $4)", [postTitle, postContent, postDate, user.id]);
+        return res.status(202).json({
+            success: true,
+            message: "Post created!"
+        });
     } catch (error) {
         console.log("Error: ", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
     }
 });
 
