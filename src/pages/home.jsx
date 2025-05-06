@@ -6,6 +6,7 @@ import 'materialize-css/dist/js/materialize.min.js';
 import Footer from "../components/footer";
 import HeaderMainPage from '../components/headerMainPage';
 import FAButton from '../components/FAButton';
+import PostCard from '../components/postCard';
 
 const HomePage = () => {
     const [user, setUser] = useState(null);
@@ -16,12 +17,12 @@ const HomePage = () => {
         if (token) {
             axios.get("http://localhost:3000/home", {
                 headers: {
-                    Authorization: `Bearer ${token}` // 🪪 send the token
+                    Authorization: `Bearer ${token}` // send the token
                 }
             })
             .then(res => {
                 if (res.data.success) {
-                    setUser(res.data.user); // 🧑 set user data
+                    setUser(res.data.user); // set user data
                 } else {
                     console.error("Failed to fetch user info");
                 }
@@ -43,13 +44,16 @@ const HomePage = () => {
                     <div className="card amber lighten-2">
                         <div className="card-content black-text">
                             <span className="card-title">Welcome, {user.user_first_name}</span>
-                            <p>This is a simple placeholder text. All your posts will appear below this crad component</p>
                         </div>
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <PostCard/>
+            </div>
         </div>
         <FAButton/>
+        <Footer/>
         </>
     );
 }

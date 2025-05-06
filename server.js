@@ -200,6 +200,23 @@ app.post("/newPost", verifyToken, async (req, res) => {
     }
 });
 
+//Posts rendering
+app.get("/getPost", verifyToken, async (req, res) => {
+    const user = req.user;
+
+    try {
+        const result = await db.query("SELECT post_id, post_title, post_content, post_date FROM post_info WHERE post_user_id = $1 ORDER BY post_id DESC", [user.id]);
+
+        return res.status(200).json({
+            success: true,
+            posts: result.rows
+        })
+
+    } catch (err) {
+        console.error("Error: ", err);
+    }
+})
+
 //Server running
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
