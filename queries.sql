@@ -17,3 +17,6 @@ CREATE TABLE post_info (
     post_id SERIAL PRIMARY KEY,
     post_user_id INTEGER REFERENCES user_info(user_id)
 )
+
+--POST INSERTION--
+INSERT INTO post_info (post_title, post_content, post_date, post_user_id) VALUES ($1, $2, $3, $4)

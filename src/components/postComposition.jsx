@@ -12,9 +12,18 @@ const PostComposition = () => {
     const modalRef = useRef(null);
     const [postTitle, setPostTitle] = useState(null);
     const [postContent, setPostContent] = useState(null);
+    const [rerender, setRerender] = useState(false);
 
-    const handleNewPost = async (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        M.Modal.init(modalRef.current);
+
+        const textarea = document.getElementById("postContent");
+        if(textarea) {
+            M.CharacterCounter.init(textarea);
+        }
+    }, [rerender]);
+
+    const handleNewPost = async () => {
 
         const token = localStorage.getItem("token");
 
@@ -24,7 +33,7 @@ const PostComposition = () => {
         }
 
         try {
-            const response = await axios.post(serverURL + "/newPost", {
+            await axios.post(serverURL + "/newPost", {
                 postTitle,
                 postContent
             },
@@ -32,22 +41,12 @@ const PostComposition = () => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }
-        );
-            console.log(response.data);
+            });
+            setRerender(prev => !prev);
         } catch (error) {
             console.error("Something's gone wrong: ", error);
         }
     };
-
-    useEffect(() => {
-        M.Modal.init(modalRef.current);
-
-        const textarea = document.getElementById("postContent");
-        if(textarea) {
-            M.CharacterCounter.init(textarea);
-        }
-    }, []);
 
     return(
         <div>

@@ -53,7 +53,7 @@ app.use(cors());
 app.use(express.json());
 
 //Creating new users
-app.post("/signup", async (req, res) => {
+/*app.post("/signup", async (req, res) => {
     const {
         email,
         password,
@@ -63,7 +63,10 @@ app.post("/signup", async (req, res) => {
     try {
         const checkResult = await db.query("SELECT * FROM user_info WHERE user_email = $1", [email]);
         if(checkResult.rows.length > 0) {
-            console.log("There's an user registered with this email already.");
+            return res.status(401).json({
+                success: false,
+                message: "This email is in use already. Please, try another one"
+            });
         } else {
             bcrypt.hash(password, saltRounds, async (err, hash) => {
                 if(err) {
@@ -71,6 +74,12 @@ app.post("/signup", async (req, res) => {
                 } else {
                     const result = await db.query("INSERT INTO user_info (user_email, user_password, user_first_name, user_last_name) VALUES ($1, $2, $3, $4)", [email, hash, firstName, lastName]);
                     console.log(result);
+                    return (
+                        res.status(200).json({
+                            success: true,
+                            message: "Account created successfully"
+                        })
+                    )
                 }
             });
         }
@@ -79,6 +88,57 @@ app.post("/signup", async (req, res) => {
     }
 
     
+});*/
+app.post("/signup", async (req, res) => {
+    const { email, password, firstName, lastName } = req.body;
+
+    try {
+        const checkResult = await db.query(
+            "SELECT * FROM user_info WHERE user_email = $1",
+            [email]
+        );
+
+        if (checkResult.rows.length > 0) {
+            return res.status(401).json({
+                success: false,
+                message: "This email is in use already. Please, try another one"
+            });
+        } else {
+            bcrypt.hash(password, saltRounds, async (err, hash) => {
+                if (err) {
+                    console.log("Hashing error: ", err);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Server error while creating account"
+                    });
+                }
+
+                try {
+                    await db.query(
+                        "INSERT INTO user_info (user_email, user_password, user_first_name, user_last_name) VALUES ($1, $2, $3, $4)",
+                        [email, hash, firstName, lastName]
+                    );
+
+                    return res.status(200).json({
+                        success: true,
+                        message: "Account created successfully"
+                    });
+                } catch (dbError) {
+                    console.log("Database insertion error: ", dbError);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Database error during signup"
+                    });
+                }
+            });
+        }
+    } catch (error) {
+        console.log("Query error: ", error);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong during signup"
+        });
+    }
 });
 
 //Authenticating users when logging in
@@ -214,6 +274,28 @@ app.get("/getPost", verifyToken, async (req, res) => {
 
     } catch (err) {
         console.error("Error: ", err);
+    }
+})
+
+//Delete post
+app.delete("/deletePost/:id", verifyToken, async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user.id;
+
+    try {
+        const result = await db.query(
+            "DELETE FROM post_info WHERE post_id = $1 AND post_user_id = $2",
+            [postId, userId]
+        );
+
+        if (result.rowCount > 0) {
+            return res.status(200).json({ success: true, message: "Post deleted." });
+        } else {
+            return res.status(403).json({ success: false, message: "Unauthorized or post not found." });
+        }
+    } catch (err) {
+        console.error("Error deleting post:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
 })
 

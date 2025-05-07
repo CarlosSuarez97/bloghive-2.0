@@ -3,6 +3,8 @@ import 'materialize-css/dist/css/materialize.min.css'; //importing Materialize C
 import 'materialize-css/dist/js/materialize.min.js'; //importing Materialize's JS components
 import "../../public/styles/signUpForm.css";
 import axios from "axios";
+import M from "materialize-css";
+import { useNavigate } from "react-router-dom";
 
 const serverURL = "http://localhost:3000"; //URL of where the server's being hosted
 
@@ -13,11 +15,11 @@ const SignUpForm = () => {
     const [showPassword, setShowPassword] = useState(false); // this is for hiding the input of the password
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    
+    const navigate = useNavigate();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await axios.post(serverURL + "/signup", {
                 email,
@@ -25,9 +27,24 @@ const SignUpForm = () => {
                 firstName,
                 lastName
             });
-            console.log(response.data);
+    
+            const { success, message } = response.data;
+    
+            M.toast({
+                html: message || (success ? "Account created" : "Something went wrong"),
+                classes: "grey darken-4"
+            });
+    
+            if (success) {
+                setTimeout(() => navigate("/login"), 2000); // Delay navigation so toast shows
+            }
+    
         } catch (error) {
-            console.log("Error: ", error);
+            M.toast({
+                html: "Server error during signup",
+                classes: "grey darken-4"
+            });
+            console.error("Error: ", error);
         }
     };
 
@@ -36,23 +53,23 @@ const SignUpForm = () => {
             <form onSubmit={handleSignUp} className="col s12">
                 <div className="row">
                     <div className="input-field col s12 m6 l6">
-                        <input type="text" value={firstName} id="firstName" className="validate" onChange={(e) => setFirstName(e.target.value)}/>
+                        <input type="text" value={firstName} id="firstName" className="validate" onChange={(e) => setFirstName(e.target.value)} required/>
                         <label htmlFor="firstName">First name</label>
                     </div>
                     <div className="input-field col s12 m6 l6">
-                        <input type="text" value={lastName} id="lastName" className="validate" onChange={(e) => setLastName(e.target.value)}/>
+                        <input type="text" value={lastName} id="lastName" className="validate" onChange={(e) => setLastName(e.target.value)} required/>
                         <label htmlFor="lastName">Last name</label>
                     </div>
                 </div>
                 <div className="row">
                     <div className="input-field col s12">
-                        <input type="email" value={email} id="email" className="validate" onChange={(e) => setEmail(e.target.value)}/>
+                        <input type="email" value={email} id="email" className="validate" onChange={(e) => setEmail(e.target.value)} required/>
                         <label htmlFor="email">Email</label>
                     </div>
                 </div>
                 <div className="row">
                     <div className="input-field col s12">
-                        <input type={showPassword ? "text": "password"} value={password}  name="password" id="password" onChange={(e) => setPassword(e.target.value)}/>
+                        <input type={showPassword ? "text": "password"} value={password}  name="password" id="password" onChange={(e) => setPassword(e.target.value)} required/>
                         <label htmlFor="password">Password</label>
                         <span
                         className="material-icons prefix"

@@ -7,7 +7,7 @@ const serverURL = "http://localhost:3000";
 
 const PostCard = () => {
     const [posts, setPosts] = useState([]);
-    const [reload, setReload] = useState(false);
+    const [rerender, setRerender] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -26,7 +26,22 @@ const PostCard = () => {
                 console.error("Error at fetching posts: ", err);
             });
         }
-    }, [reload]);
+    }, [rerender]);
+
+    const handleDelete = async (postId) => {
+        const token = localStorage.getItem("token");
+
+        try {
+            await axios.delete(`${serverURL}/deletePost/${postId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setRerender(prev => !prev);
+        } catch (error) {
+            console.error("Error deleting the post: ", error);
+        }
+    }
 
     return (
         <>
@@ -43,7 +58,7 @@ const PostCard = () => {
                             </div> */}
                         </div>
                         <div className="card-action amber lighten-2">
-                            <a href="#" className="black-text">Delete</a>
+                            <a href="#!" className="black-text" onClick={() => handleDelete(post.post_id)}>Delete</a>
                             <a href="#" className="black-text">Edit</a>
                         </div>
                     </div>
