@@ -50,8 +50,8 @@ const PostComposition = () => {
 
     return(
         <div>
-            <div className="modal grey darken-4" id="my-modal" ref={modalRef} style={{padding: "10px"}}>
-                <h5 className="amber-text">New Post</h5>
+            <div className="modal grey darken-4" id="composePost" ref={modalRef} style={{padding: "10px"}}>
+                <h5 className="white-text">New Post</h5>
                 <form onSubmit={handleNewPost}>
                     <div className="modal-content">
                         <div className="row">

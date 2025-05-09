@@ -5,8 +5,9 @@ import 'materialize-css/dist/js/materialize.min.js';
 
 const serverURL = "http://localhost:3000";
 
-const PostCard = () => {
+const PostCard = ({onUpdate}) => {
     const [posts, setPosts] = useState([]);
+    const [postToDelete, setPostToDelete] = useState(null);
     const [rerender, setRerender] = useState(false);
 
     useEffect(() => {
@@ -26,6 +27,9 @@ const PostCard = () => {
                 console.error("Error at fetching posts: ", err);
             });
         }
+
+        const elems = document.querySelectorAll(".modal");
+        M.Modal.init(elems);
     }, [rerender]);
 
     const handleDelete = async (postId) => {
@@ -37,7 +41,14 @@ const PostCard = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            setPosts(prev => prev.filter(p => p.post_id !== postToDelete));
+            setPostToDelete(null);
+
+            const modalInstance = M.Modal.getInstance(document.getElementById("deleteModal"));
+            modalInstance.close();
+            M.toast({html: "Post Deleted", classes: "grey darken-4"})
             setRerender(prev => !prev);
+            if(onUpdate) onUpdate();
         } catch (error) {
             console.error("Error deleting the post: ", error);
         }
@@ -53,17 +64,26 @@ const PostCard = () => {
                                 <span className="card-title" style={{fontWeight: "bold"}}>{post.post_title}</span>
                                 <p>{post.post_content}</p>
                             </div>
-                            {/* <div className="row">
-                                <span>{post.post_date}</span>
-                            </div> */}
                         </div>
-                        <div className="card-action amber lighten-2">
-                            <a href="#!" className="black-text" onClick={() => handleDelete(post.post_id)}>Delete</a>
-                            <a href="#" className="black-text">Edit</a>
+                        <div className="card-action grey darken-3">
+                            <a href="#deleteModal" className="white-text modal-trigger" onClick={() => setPostToDelete(post.post_id)}><i className="material-icons small">delete</i></a>
+                            <a href="#" className="white-text"><i className="material-icons small">edit</i></a>
                         </div>
                     </div>
                 </div>
             ))}
+            
+            {/*Confirmation for deletion*/}
+            <div id="deleteModal" className="modal amber lighten-2">
+                <div className="modal-content">
+                    <h6 className="black-text">Are you sure you want to delete this post?</h6>
+                    <span className="black-text">This action cannot be undone</span>
+                </div>
+                <div className="modal-footer amber lighten-1">
+                    <a href="#!" className="modal-close waves-effect btn-flat black-text">Cancel</a>
+                    <a href="#!" onClick={() => handleDelete(postToDelete)} className="waves-effect waves-red btn red">Delete</a>
+                </div>
+            </div>
         </>
     );
 };

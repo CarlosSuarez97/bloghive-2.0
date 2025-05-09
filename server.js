@@ -162,6 +162,8 @@ app.post("/login", async (req, res) => {
         } else if (checkForUser.rows.length > 0) {
 
             const user = checkForUser.rows[0];
+            const postCountResult = await db.query("SELECT COUNT(*) FROM post_info WHERE post_user_id = $1", [user.user_id]);
+            const postCount = parseInt(postCountResult.rows[0].count, 10);
             const hashedPassword = checkForUser.rows[0].user_password;
 
             console.log("There's an user using that email address");
@@ -179,7 +181,8 @@ app.post("/login", async (req, res) => {
                             id: user.user_id,
                             email: user.user_email,
                             firstName: user.user_first_name,
-                            lastName: user.user_last_name
+                            lastName: user.user_last_name,
+                            posts: postCount
                         },
                         process.env.JWT_SECRET,
                         {expiresIn: "1h"}
@@ -213,11 +216,13 @@ app.get("/home", verifyToken, async (req, res) => {
 
     try {
         const result = await db.query("SELECT user_email, user_first_name, user_last_name FROM user_info WHERE user_id = $1", [user.id]);
+        const postCount = await db.query("SELECT COUNT(*) FROM post_info WHERE post_user_id = $1", [user.id]);
 
         if (result.rows.length > 0) {
             return res.json({
                 success: true,
-                user: result.rows[0]
+                user: result.rows[0],
+                postCount: parseInt(postCount.rows[0].count)
             });
         } else {
             return res.status(404).json({

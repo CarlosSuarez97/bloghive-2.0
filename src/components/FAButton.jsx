@@ -26,7 +26,7 @@ const FAButton = () => {
                     <i class="large material-icons black-text">mode_edit</i>
                 </a>
                 <ul>
-                    <li><a class="btn-floating green modal-trigger amber lighten-2" href="#my-modal"><i class="material-icons black-text">add</i></a></li>
+                    <li><a class="btn-floating green modal-trigger amber lighten-2" href="#composePost"><i class="material-icons black-text">add</i></a></li>
                 </ul>
             </div>
         </div>

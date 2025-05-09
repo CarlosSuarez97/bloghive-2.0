@@ -28,14 +28,12 @@ const SignUpForm = () => {
                 lastName
             });
     
-            const { success, message } = response.data;
-    
             M.toast({
-                html: message || (success ? "Account created" : "Something went wrong"),
+                html: response.data.message || (response.data.success ? "Account created" : "Something went wrong"),
                 classes: "grey darken-4"
             });
     
-            if (success) {
+            if (response.data.success) {
                 setTimeout(() => navigate("/login"), 2000); // Delay navigation so toast shows
             }
     

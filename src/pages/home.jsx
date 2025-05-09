@@ -10,8 +10,9 @@ import PostCard from '../components/postCard';
 
 const HomePage = () => {
     const [user, setUser] = useState(null);
+    const [posts, setPosts] = useState(null);
 
-    useEffect(() => {
+    const fetchUserInfo = () => {
         const token = localStorage.getItem("token");
 
         if (token) {
@@ -23,6 +24,7 @@ const HomePage = () => {
             .then(res => {
                 if (res.data.success) {
                     setUser(res.data.user); // set user data
+                    setPosts(res.data.postCount);
                 } else {
                     console.error("Failed to fetch user info");
                 }
@@ -31,6 +33,10 @@ const HomePage = () => {
                 console.error("Error fetching user info:", err);
             });
         }
+    }
+
+    useEffect(() => {
+        fetchUserInfo();
     }, []);
 
     if (!user) return <p>Loading...</p>;
@@ -38,18 +44,28 @@ const HomePage = () => {
     return (
         <>
         <HeaderMainPage/>
-        <div> {/*this is the card that will display the user's information*/}
+        {/*this is the card that will display the user's information*/}
+        <div>
             <div className="row">
                 <div className="col s12 m12 l12">
                     <div className="card amber lighten-2">
                         <div className="card-content black-text">
-                            <span className="card-title">Welcome, {user.user_first_name}</span>
+                            <div className="row">
+                                <div className="col m12 s12 l12">
+                                    <h3>Welcome, {user.user_first_name}</h3>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col l6 m6 s12">
+                                    <h5>Posts: {posts}</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="row">
-                <PostCard/>
+                <PostCard onUpdate={fetchUserInfo}/>
             </div>
         </div>
         <FAButton/>
