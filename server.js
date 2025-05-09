@@ -53,42 +53,6 @@ app.use(cors());
 app.use(express.json());
 
 //Creating new users
-/*app.post("/signup", async (req, res) => {
-    const {
-        email,
-        password,
-        firstName,
-        lastName
-    } = req.body;
-    try {
-        const checkResult = await db.query("SELECT * FROM user_info WHERE user_email = $1", [email]);
-        if(checkResult.rows.length > 0) {
-            return res.status(401).json({
-                success: false,
-                message: "This email is in use already. Please, try another one"
-            });
-        } else {
-            bcrypt.hash(password, saltRounds, async (err, hash) => {
-                if(err) {
-                    console.log("There's been an issue: ", err);
-                } else {
-                    const result = await db.query("INSERT INTO user_info (user_email, user_password, user_first_name, user_last_name) VALUES ($1, $2, $3, $4)", [email, hash, firstName, lastName]);
-                    console.log(result);
-                    return (
-                        res.status(200).json({
-                            success: true,
-                            message: "Account created successfully"
-                        })
-                    )
-                }
-            });
-        }
-    } catch (error) {
-        console.log("There's been an issue: ", error);
-    }
-
-    
-});*/
 app.post("/signup", async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
 
