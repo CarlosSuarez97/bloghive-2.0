@@ -7,10 +7,14 @@ import Footer from "../components/footer";
 import HeaderMainPage from '../components/headerMainPage';
 import FAButton from '../components/FAButton';
 import PostCard from '../components/postCard';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const HomePage = () => {
     const [user, setUser] = useState(null);
     const [posts, setPosts] = useState(null);
+    const navigate = useNavigate();
 
     const fetchUserInfo = () => {
         const token = localStorage.getItem("token");
@@ -39,7 +43,15 @@ const HomePage = () => {
         fetchUserInfo();
     }, []);
 
-    if (!user) return <p>Loading...</p>;
+    useEffect(() => {
+        if (user === null && localStorage.getItem("token")) {
+            // Do nothing, waiting for token check
+        } else if (!user) {
+            navigate("/");
+        }
+    }, [user, navigate]);
+
+    if (!user) return null;
 
     return (
         <>
