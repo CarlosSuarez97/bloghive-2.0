@@ -59,7 +59,7 @@ const HomePage = () => {
         {/*this is the card that will display the user's information*/}
         <div>
             <div className="row">
-                <div className="col s12 m12 l12">
+                <div className="col s12 m8 offset-m2 l6 offset-l3">
                     <div className="card amber lighten-2">
                         <div className="card-content black-text">
                             <div className="row">
