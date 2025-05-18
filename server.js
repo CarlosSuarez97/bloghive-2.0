@@ -264,9 +264,38 @@ app.delete("/deletePost/:id", verifyToken, async (req, res) => {
         }
     } catch (err) {
         console.error("Error deleting post:", err);
-        return res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
-})
+});
+
+//Edit post
+app.patch("/editPost/:id", verifyToken, async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user.id;
+    const { editedTitle, editedContent } = req.body;
+
+    // Input validation
+    if (!editedTitle?.trim() || !editedContent?.trim()) {
+        return res.status(400).json({ success: false, message: "Title and content cannot be empty." });
+    }
+
+    try {
+        const result = await db.query(
+            "UPDATE post_info SET post_title = $1, post_content = $2 WHERE post_id = $3 AND post_user_id = $4",
+            [editedTitle.trim(), editedContent.trim(), postId, userId]
+        );
+
+        if (result.rowCount > 0) {
+            return res.status(200).json({ success: true, message: "Post edited successfully." });
+        } else {
+            return res.status(403).json({ success: false, message: "Unauthorized action." });
+        }
+    } catch (err) {
+        console.error("Error: ", err);
+        return res.status(500).json({ success: false, message: "Internal server error." });
+    }
+});
+
 
 //Server running
 app.listen(port, () => {

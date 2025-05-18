@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min.js';
+import EditPost from "./editPost";
 
 const serverURL = "http://localhost:3000";
 
 const PostCard = ({onUpdate}) => {
     const [posts, setPosts] = useState([]);
     const [postToDelete, setPostToDelete] = useState(null);
+    const [editingPost, setEditingPost] = useState(null);
     const [rerender, setRerender] = useState(false);
 
     useEffect(() => {
@@ -67,11 +69,24 @@ const PostCard = ({onUpdate}) => {
                         </div>
                         <div className="card-action grey darken-3">
                             <a href="#deleteModal" className="white-text modal-trigger" onClick={() => setPostToDelete(post.post_id)}><i className="material-icons small">delete</i></a>
-                            <a href="#" className="white-text"><i className="material-icons small">edit</i></a>
+                            <a href="#editPost" className="white-text modal-trigger" onClick={() => setEditingPost(post)}><i className="material-icons small">edit</i></a>
                         </div>
                     </div>
                 </div>
             ))}
+
+            {/* Edit Modal */}
+            {editingPost && (
+                <EditPost
+                    postId={editingPost.post_id}
+                    postTitle={editingPost.post_title}
+                    postContent={editingPost.post_content}
+                    onEditComplete={() => {
+                        setEditingPost(null);
+                        setRerender(prev => !prev);
+                    }}
+                />
+            )}
             
             {/*Confirmation for deletion*/}
             <div id="deleteModal" className="modal amber lighten-2">
